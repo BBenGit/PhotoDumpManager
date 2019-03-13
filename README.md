@@ -1,2 +1,1 @@
 # PhotoDumpManager
-# PhotoDumpManager
