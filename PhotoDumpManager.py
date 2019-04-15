@@ -7,9 +7,8 @@ if(len(sys.argv) < 3):
 dumpDirectory = sys.argv[1]
 exitDirectory = sys.argv[2]
 filePath = ''
-fileExt = ''
 
-if not os.path.exists(exitDirectory):
+if not os.path.exists(dumpDirectory):
     raise ValueError('No directory at '+dumpDirectory+'.')
 if not os.path.exists(exitDirectory):
     raise ValueError('No directory at '+exitDirectory+'.')
@@ -20,14 +19,15 @@ if not dumpDirectory[-1:] == os.sep:
 if not exitDirectory[-1:] == os.sep:
     exitDirectory += os.sep
 
-for filename in os.listdir(dumpDirectory):
-    test = time.strftime("%Y-%B-%d", time.localtime(os.path.getmtime(dumpDirectory+filename))).split('-')
-    test.insert(0, filename.split('.')[1])
+for fileName in os.listdir(dumpDirectory):
+    fileTimestamp = time.strftime("%Y-%B-%d", time.localtime(os.path.getmtime(dumpDirectory+fileName))).split('-')
+    fileTimestamp.insert(0, fileName.split('.')[1])
     filePath = exitDirectory
-    for text in test:
+    for text in fileTimestamp:
         filePath += text + os.sep
         if not os.path.exists(filePath):
             os.makedirs(filePath)
-    if not os.path.exists(filePath + filename):
-        copy2(dumpDirectory + filename, filePath + filename)
+    if not os.path.exists(filePath + fileName):
+        print('Moving file ' + dumpDirectory + fileName + ' to ' + filePath + fileName)
+        copy2(dumpDirectory + fileName, filePath + fileName)
     
