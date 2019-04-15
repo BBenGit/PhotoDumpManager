@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 # Copyright 2019 Benjamin Beau <fnounfoun@gmail.com>
 #
