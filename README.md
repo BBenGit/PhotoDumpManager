@@ -18,10 +18,17 @@ chmod +x /usr/local/bin/pdm
 
 # How to use
 
-You can now use the command pdm to order your files. Both `<input_directory> <output_directory>` must exist before using the `pdm` command.
+You can now use the pdm `command` to order your files. Both `input` and `output` directories have to exist on filesystem before calling `pdm`.
 ```bash
-USAGE:
-        pdm <input_directory> <output_directory>
+usage: pdm [-h] --input-directory INPUT_DIRECTORY
+                --output-directory OUTPUT_DIRECTORY
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --input-directory INPUT_DIRECTORY, -i INPUT_DIRECTORY
+                        Directory where to find input images
+  --output-directory OUTPUT_DIRECTORY, -o OUTPUT_DIRECTORY
+                        Directory where to put destination files
 ```
 
 ## Example
