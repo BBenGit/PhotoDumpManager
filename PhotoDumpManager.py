@@ -39,14 +39,15 @@ if not exitDirectory[-1:] == os.sep:
     exitDirectory += os.sep
 
 for fileName in os.listdir(dumpDirectory):
-    fileTimestamp = time.strftime("%Y-%B-%d", time.localtime(os.path.getmtime(dumpDirectory+fileName))).split('-')
-    fileTimestamp.insert(0, fileName.split('.')[1])
-    filePath = exitDirectory
-    for text in fileTimestamp:
-        filePath += text + os.sep
-        if not os.path.exists(filePath):
-            os.makedirs(filePath)
-    if not os.path.exists(filePath + fileName):
-        print('Moving file ' + dumpDirectory + fileName + ' to ' + filePath + fileName)
-        copy2(dumpDirectory + fileName, filePath + fileName)
+    if(os.path.isfile(fileName)):
+        fileTimestamp = time.strftime("%Y-%B-%d", time.localtime(os.path.getmtime(dumpDirectory+fileName))).split('-')
+        fileTimestamp.insert(0, fileName.split('.')[1])
+        filePath = exitDirectory
+        for text in fileTimestamp:
+            filePath += text + os.sep
+            if not os.path.exists(filePath):
+                os.makedirs(filePath)
+        if not os.path.exists(filePath + fileName):
+            print('Moving file ' + dumpDirectory + fileName + ' to ' + filePath + fileName)
+            copy2(dumpDirectory + fileName, filePath + fileName)
     
