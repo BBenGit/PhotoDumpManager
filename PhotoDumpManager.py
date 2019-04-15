@@ -17,37 +17,51 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import os.path, os, time, sys
+import argparse
+import logging
+import os
+import time
+from datetime import datetime
+from pathlib import Path
 from shutil import copy2
 
-if(len(sys.argv) < 3):
-    raise AttributeError('Please provide path for dump and exit directories.')
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.INFO)
 
-dumpDirectory = sys.argv[1]
-exitDirectory = sys.argv[2]
-filePath = ''
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input-directory", "-i", type=str, required=True, help="Directory where to find input images")
+    parser.add_argument(
+        "--output-directory", "-o", type=str, required=True, help="Directory where to put destination files"
+    )
+    args = parser.parse_args()
 
-if not os.path.exists(dumpDirectory):
-    raise ValueError('No directory at '+dumpDirectory+'.')
-if not os.path.exists(exitDirectory):
-    raise ValueError('No directory at '+exitDirectory+'.')
+    input_directory = args.input_directory
+    output_directory = args.output_directory
 
-if not dumpDirectory[-1:] == os.sep:
-    dumpDirectory += os.sep
+    if not os.path.exists(input_directory):
+        raise NotADirectoryError('No directory at %s.', input_directory)
+    if not os.path.exists(output_directory):
+        logger.info("Missing output directory at %s. Creating it…", output_directory)
+        os.makedirs(output_directory)
 
-if not exitDirectory[-1:] == os.sep:
-    exitDirectory += os.sep
+    for filename in os.listdir(input_directory):
+        if os.path.isfile(os.path.join(input_directory, filename)):
+            access_time = datetime.fromtimestamp(
+                time.mktime(time.localtime(os.path.getmtime(os.path.join(input_directory, filename))))
+            )
+            extension = Path(filename).suffix[1:]  # Remove trailing point between filename and extension
 
-for fileName in os.listdir(dumpDirectory):
-    if(os.path.isfile(fileName)):
-        fileTimestamp = time.strftime("%Y-%B-%d", time.localtime(os.path.getmtime(dumpDirectory+fileName))).split('-')
-        fileTimestamp.insert(0, fileName.split('.')[1])
-        filePath = exitDirectory
-        for text in fileTimestamp:
-            filePath += text + os.sep
-            if not os.path.exists(filePath):
-                os.makedirs(filePath)
-        if not os.path.exists(filePath + fileName):
-            print('Moving file ' + dumpDirectory + fileName + ' to ' + filePath + fileName)
-            copy2(dumpDirectory + fileName, filePath + fileName)
-    
+            # Make subdirectory like: filename/year/month/day
+            file_path = output_directory
+            for subdir_name in (extension, access_time.year, access_time.month, access_time.day):
+                file_path = os.path.join(file_path, str(subdir_name))
+                if not os.path.exists(file_path):
+                    os.makedirs(file_path)
+
+            # Copy the image if does not already exists
+            if not os.path.exists(os.path.join(file_path, filename)):
+                input_file, output_file = os.path.join(input_directory, filename), os.path.join(file_path, filename)
+                logger.info("Copying {} to {}".format(input_file, output_file))
+                copy2(input_file, output_file)
