@@ -12,7 +12,7 @@ You will need python3 to use this script. Please refer to the official website :
 ## Getting the script
 
 ```
-curl -o /usr/local/bin/pdm https://github.com/BBenGit/PhotoDumpManager/blob/master/PhotoDumpManager.py
+curl -o /usr/local/bin/pdm https://raw.githubusercontent.com/BBenGit/PhotoDumpManager/master/PhotoDumpManager.py
 chmod +x /usr/local/bin/pdm
 ```
 
