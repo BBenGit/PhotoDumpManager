@@ -19,15 +19,19 @@ curl -o /usr/local/bin/pdm https://raw.githubusercontent.com/BBenGit/PhotoDumpMa
 
 You can now use the pdm `command` to order your files. `input` has to exist on the filesystem before calling `pdm`.
 ```bash
-usage: pdm [-h] --input-directory INPUT_DIRECTORY
-                --output-directory OUTPUT_DIRECTORY
+usage: PhotoDumpManager.py [-h] [--recursive] --input-directory
+                           INPUT_DIRECTORY --output-directory OUTPUT_DIRECTORY
+                           --types TYPES [TYPES ...]
 
 optional arguments:
   -h, --help            show this help message and exit
+  --recursive, -r
   --input-directory INPUT_DIRECTORY, -i INPUT_DIRECTORY
                         Directory where to find input images
   --output-directory OUTPUT_DIRECTORY, -o OUTPUT_DIRECTORY
                         Directory where to put destination files
+  --types TYPES [TYPES ...], -t TYPES [TYPES ...]
+                        Types of file to be ordered
 ```
 
 ## Example
