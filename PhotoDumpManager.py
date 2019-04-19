@@ -39,7 +39,7 @@ def sort(inner_directory, output_directory, types, recursive):
                     )
                     extension = Path(filename).suffix[1:]  # Remove trailing point between filename and extension
 
-                    if extension in types:
+                    if extension.lower() in (t.lower() for t in types):
                         # Make subdirectory like: filename/year/month/day
                         file_path = output_directory
                         for subdir_name in (extension, access_time.year, calendar.month_name[access_time.month], access_time.day):
