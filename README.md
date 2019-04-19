@@ -37,16 +37,16 @@ optional arguments:
 ## Example
 
 ```bash
-pdm -i /media/SDcard/DCIM -o ~/Pictures
+pdm -r -i /media/SDcard/DCIM -o ~/Pictures -t jpg raw
 ```
 
 The file structure is as folowing :
 ```
 Pictures    
-└───Type
-  └───Year
-    └───Month
-      └───Day
+└─Type
+  └─Year
+    └─Month
+      └─Day
 ```
 e.g.
 ```
