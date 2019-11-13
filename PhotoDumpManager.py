@@ -30,31 +30,48 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.INFO)
 
+iterator = 1
+count = 0
+
 def sort(inner_directory, output_directory, types, recursive):
-        for filename in os.listdir(inner_directory):
+    global iterator
+    global count
+    for filename in os.listdir(inner_directory):
+        if not filename.startswith('.'): # Ignore hidden files
+            if os.path.isfile(os.path.join(inner_directory, filename)):
+                access_time = datetime.fromtimestamp(
+                    time.mktime(time.localtime(os.path.getmtime(os.path.join(inner_directory, filename))))
+                )
+                extension = Path(filename).suffix[1:]  # Remove trailing point between filename and extension
+
+                if extension.lower() in (t.lower() for t in types):
+                    # Make subdirectory like: filename/year/month/day
+                    file_path = output_directory
+                    for subdir_name in (extension, access_time.year, calendar.month_name[access_time.month], access_time.day):
+                        file_path = os.path.join(file_path, str(subdir_name))
+                        if not os.path.exists(file_path):
+                            os.makedirs(file_path)
+
+                    # Copy the image if does not already exists
+                    if not os.path.exists(os.path.join(file_path, filename)):
+                        input_file, output_file = os.path.join(inner_directory, filename), os.path.join(file_path, filename)
+                        logger.info(("{:"+str(len(str(count)))+"}/{} - Copying to {}").format(iterator, count, output_file))
+                        copy2(input_file, output_file)
+                        iterator += 1
+            else:
+                if recursive:
+                    sort(os.path.join(inner_directory, filename), output_directory, types, recursive)
+
+def file_count(inner_directory, output_directory, types, recursive):
+    global count
+    for filename in os.listdir(inner_directory):
             if not filename.startswith('.'): # Ignore hidden files
                 if os.path.isfile(os.path.join(inner_directory, filename)):
-                    access_time = datetime.fromtimestamp(
-                        time.mktime(time.localtime(os.path.getmtime(os.path.join(inner_directory, filename))))
-                    )
-                    extension = Path(filename).suffix[1:]  # Remove trailing point between filename and extension
+                    count += 1
 
-                    if extension.lower() in (t.lower() for t in types):
-                        # Make subdirectory like: filename/year/month/day
-                        file_path = output_directory
-                        for subdir_name in (extension, access_time.year, calendar.month_name[access_time.month], access_time.day):
-                            file_path = os.path.join(file_path, str(subdir_name))
-                            if not os.path.exists(file_path):
-                                os.makedirs(file_path)
-
-                        # Copy the image if does not already exists
-                        if not os.path.exists(os.path.join(file_path, filename)):
-                            input_file, output_file = os.path.join(inner_directory, filename), os.path.join(file_path, filename)
-                            logger.info("Copying {} to {}".format(input_file, output_file))
-                            copy2(input_file, output_file)
                 else:
                     if recursive:
-                        sort(os.path.join(inner_directory, filename), output_directory, types, recursive)
+                        file_count(os.path.join(inner_directory, filename), output_directory, types, recursive)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -77,6 +94,7 @@ if __name__ == "__main__":
         logger.info("Missing output directory at %s. Creating it…", output_directory)
         os.makedirs(output_directory)
 
+    file_count(input_directory, output_directory, types, recursive)
     sort(input_directory, output_directory, types, recursive)
 
     
