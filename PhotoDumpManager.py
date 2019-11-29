@@ -62,16 +62,15 @@ def sort(inner_directory, output_directory, types, recursive):
                 if recursive:
                     sort(os.path.join(inner_directory, filename), output_directory, types, recursive)
 
-def file_count(inner_directory, output_directory, types, recursive):
+def file_count(inner_directory, types, recursive):
     global count
     for filename in os.listdir(inner_directory):
-            if not filename.startswith('.'): # Ignore hidden files
-                if os.path.isfile(os.path.join(inner_directory, filename)):
-                    count += 1
+        if not filename.startswith('.') and Path(filename).suffix[1:].lower() in (t.lower() for t in types) and os.path.isfile(os.path.join(inner_directory, filename)):
+                count += 1
 
-                else:
-                    if recursive:
-                        file_count(os.path.join(inner_directory, filename), output_directory, types, recursive)
+        else:
+            if recursive:
+                file_count(os.path.join(inner_directory, filename), types, recursive)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -94,7 +93,7 @@ if __name__ == "__main__":
         logger.info("Missing output directory at %s. Creating it…", output_directory)
         os.makedirs(output_directory)
 
-    file_count(input_directory, output_directory, types, recursive)
+    file_count(input_directory, types, recursive)
     sort(input_directory, output_directory, types, recursive)
 
     
