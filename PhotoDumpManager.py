@@ -47,7 +47,7 @@ def sort(inner_directory, output_directory, types, recursive):
                 if extension.lower() in (t.lower() for t in types):
                     # Make subdirectory like: filename/year/month/day
                     file_path = output_directory
-                    for subdir_name in (extension, access_time.year, calendar.month_name[access_time.month], access_time.day):
+                    for subdir_name in (extension, access_time.year, str(access_time.month) + '-' + calendar.month_name[access_time.month], access_time.day):
                         file_path = os.path.join(file_path, str(subdir_name))
                         if not os.path.exists(file_path):
                             os.makedirs(file_path)
