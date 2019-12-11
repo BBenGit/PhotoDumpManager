@@ -86,6 +86,8 @@ if __name__ == "__main__":
     output_directory = args.output_directory
     types = args.types
     recursive = args.recursive
+    iterator = 1
+    count = 0
 
     if not os.path.exists(input_directory):
         raise NotADirectoryError('No directory at %s.', input_directory)
