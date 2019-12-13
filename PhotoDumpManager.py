@@ -65,7 +65,7 @@ def sort(inner_directory, output_directory, types, recursive):
 def file_count(inner_directory, types, recursive):
     global count
     for filename in os.listdir(inner_directory):
-        if not filename.startswith('.') and Path(filename).suffix[1:].lower() in (t.lower() for t in types) and os.path.isfile(os.path.join(inner_directory, filename)):
+        if not filename.startswith('.') and Path(filename).suffix[1:].lower() in (t.lower() for t in types) and not os.path.isfile(os.path.join(inner_directory, filename)):
                 count += 1
 
         else:
@@ -86,8 +86,6 @@ if __name__ == "__main__":
     output_directory = args.output_directory
     types = args.types
     recursive = args.recursive
-    iterator = 1
-    count = 0
 
     if not os.path.exists(input_directory):
         raise NotADirectoryError('No directory at %s.', input_directory)
