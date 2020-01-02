@@ -62,11 +62,24 @@ def sort(inner_directory, output_directory, types, recursive):
                 if recursive:
                     sort(os.path.join(inner_directory, filename), output_directory, types, recursive)
 
-def file_count(inner_directory, types, recursive):
+def file_count(inner_directory, output_directory, types, recursive):
     global count
     for filename in os.listdir(inner_directory):
-        if not filename.startswith('.') and Path(filename).suffix[1:].lower() in (t.lower() for t in types) and not os.path.isfile(os.path.join(inner_directory, filename)):
-                count += 1
+        if not filename.startswith('.'):
+            if os.path.isfile(os.path.join(inner_directory, filename)):
+                access_time = datetime.fromtimestamp(
+                    time.mktime(time.localtime(os.path.getmtime(os.path.join(inner_directory, filename))))
+                )
+                extension = Path(filename).suffix[1:]  # Remove trailing point between filename and extension
+
+                if extension.lower() in (t.lower() for t in types):
+
+                    file_path = output_directory
+                    for subdir_name in (extension, access_time.year, str(access_time.month) + '-' + calendar.month_name[access_time.month], access_time.day):
+                        file_path = os.path.join(file_path, str(subdir_name))
+
+                    if not os.path.exists(os.path.join(file_path, filename)):
+                        count += 1
 
         else:
             if recursive:
@@ -93,7 +106,7 @@ if __name__ == "__main__":
         logger.info("Missing output directory at %s. Creating it…", output_directory)
         os.makedirs(output_directory)
 
-    file_count(input_directory, types, recursive)
+    file_count(input_directory, output_directory, types, recursive)
     sort(input_directory, output_directory, types, recursive)
 
     
