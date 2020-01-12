@@ -83,7 +83,7 @@ def file_count(inner_directory, output_directory, types, recursive):
 
         else:
             if recursive:
-                file_count(os.path.join(inner_directory, filename), types, recursive)
+                file_count(os.path.join(inner_directory, filename), output_directory, types, recursive)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
