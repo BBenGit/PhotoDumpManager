@@ -32,10 +32,12 @@ logger.setLevel(logging.INFO)
 
 iterator = 1
 count = 0
+recursive = False
 
-def sort(inner_directory, output_directory, types, recursive):
+def sort(inner_directory, output_directory, types):
     global iterator
     global count
+    global recursive
     for filename in os.listdir(inner_directory):
         if not filename.startswith('.'): # Ignore hidden files
             if os.path.isfile(os.path.join(inner_directory, filename)):
@@ -62,8 +64,9 @@ def sort(inner_directory, output_directory, types, recursive):
                 if recursive:
                     sort(os.path.join(inner_directory, filename), output_directory, types, recursive)
 
-def file_count(inner_directory, output_directory, types, recursive):
+def file_count(inner_directory, output_directory, types):
     global count
+    global recursive
     for filename in os.listdir(inner_directory):
         if not filename.startswith('.'):
             if os.path.isfile(os.path.join(inner_directory, filename)):
@@ -104,6 +107,6 @@ if __name__ == "__main__":
         logger.info("Missing output directory at %s. Creating it…", output_directory)
         os.makedirs(output_directory)
 
-    file_count(input_directory, output_directory, types, recursive)
-    sort(input_directory, output_directory, types, recursive)
+    file_count(input_directory, output_directory, types)
+    sort(input_directory, output_directory, types)
     
