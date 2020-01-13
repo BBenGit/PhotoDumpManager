@@ -74,9 +74,7 @@ def file_count(inner_directory, output_directory, types, recursive):
 
                 if extension.lower() in (t.lower() for t in types):
 
-                    file_path = output_directory
-                    for subdir_name in (extension, access_time.year, str(access_time.month) + '-' + calendar.month_name[access_time.month], access_time.day):
-                        file_path = os.path.join(file_path, str(subdir_name))
+                    file_path = os.path.join(*[output_directory, extension, str(access_time.year), str(access_time.month) + '-' + calendar.month_name[access_time.month], str(access_time.day)])
 
                     if not os.path.exists(os.path.join(file_path, filename)):
                         count += 1
@@ -108,5 +106,4 @@ if __name__ == "__main__":
 
     file_count(input_directory, output_directory, types, recursive)
     sort(input_directory, output_directory, types, recursive)
-
     
