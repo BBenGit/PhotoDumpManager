@@ -1,6 +1,6 @@
 # PhotoDumpManager
 
-`PhotoDumpManager` is a tool that is designed for photographers but is useful in more domains. 
+`PhotoDumpManager` is a tool designed for photographers but is useful in more domains. 
 It sorts an input directory (e.g. camera SD card) to an ordered output directory.
 
 # How to install
